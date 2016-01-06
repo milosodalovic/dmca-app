@@ -25,6 +25,7 @@
 Route::group(['middleware' => ['web']], function () {
     Route::auth();
     Route::get('/', 'PagesController@home');
+    Route::get('notices/create/confirm', 'NoticesController@confirm');
     Route::resource('notices', 'NoticesController');
     Route::controllers([
         'auth'      => 'Auth\AuthController',

@@ -23,4 +23,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * User can create many DMCA notices
+     */
+    public function notices()
+    {
+        return $this->hasMany('App\Notice');
+    }
 }

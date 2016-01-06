@@ -40,6 +40,30 @@ class NoticesController extends Controller
 
     public function confirm(PrepareNoticeRequest $request)
     {
-        return $request->all();
+        $template = $this->compileDmcaTemplate($data=$request->all());
+        session()->flash('dmca', $data);
+        return view('notices/confirm', compact('template'));
     }
+
+    public function store()
+    {
+        $data = session()->get('dmca');
+
+        return \Request::input('template');
+    }
+    /**
+     * Compile DMCA template
+     * @param PrepareNoticeRequest $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function compileDmcaTemplate($data)
+    {
+        $data = $data + [
+                'name' => \Auth::user()->name,
+                'email' => \Auth::user()->email
+            ];
+        $template = view()->file(app_path('Http/Templates/dmca.blade.php'), $data);
+        return $template;
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Notice extends Model
 {
@@ -17,19 +18,55 @@ class Notice extends Model
     ];
 
     /**
-     * Open a new notice
-     * @param array $attributes
-     * @return static
+     * Get the recepient/provider  for the DMCA notice
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public static function open(array $attributes)
+    public function recipient()
     {
-        return new static($attributes);
+       return $this->belongsTo('App\Provider', 'provider_id');
     }
 
-    public function useTemplate($template)
+    /**
+     * Return the owner of the DMCA notice
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
     {
-        $this->template=$template;
-
-        return $this;
+        return $this->belongsTo('App\User');
     }
+
+    /**
+     * Get the email address of the recepient of the DMCA
+     * @return string
+     */
+    public function getRecipientEmail()
+    {
+        return $this->recipient->copyright_email;
+    }
+
+    /**
+     * Return email of the DMCA owner
+     * @return string
+     */
+    public function getOwnerEmail()
+    {
+        return $this->user->email;
+    }
+
+//    /**
+//     * Open a new notice
+//     * @param array $attributes
+//     * @return static
+//     */
+//    public static function open(array $attributes)
+//    {
+//        return new static($attributes);
+//    }
+//
+//    public function useTemplate($template)
+//    {
+//        $this->template=$template;
+//
+//        return $this;
+//    }
 }
